@@ -1,6 +1,6 @@
 <?php
 
-/** @var \Laravel\Lumen\Routing\Router $router */
+/** @var Router $router */
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +13,13 @@
 |
 */
 
+use Laravel\Lumen\Routing\Router;
+
 $router->get('/', function () use ($router) {
-    return $router->app->version();
+    return 'Microservice SiteLogger is running...<br/>' . $router->app->version();
+});
+
+$router->group(['prefix' => 'api/v1', 'namespace' => 'API\v1'], function () use ($router) {
+    $router->get('ping', ['uses' => 'SiteLoggerController@ping']);
+    $router->get('pingdb', ['uses' => 'SiteLoggerController@pingDB']);
 });
