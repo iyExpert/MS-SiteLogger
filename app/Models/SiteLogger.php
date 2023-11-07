@@ -2,15 +2,51 @@
 
 namespace App\Models;
 
-use MongoDB\Laravel\Eloquent\Model;
+use App\Enums\LogTypes;
+use App\Models\DefaultScoped;
+use Illuminate\Validation\Rules\Enum;
+use Jenssegers\Mongodb\Eloquent\Model;
 
+/**
+ * Class SiteLogger
+ * @package App\Models
+ *
+ * @property string $_id
+ * @property string $title
+ * @property string $action
+ * @property array $tags
+ * @property int $user_id
+ * @property string $user_name
+ * @property string $ip
+ * @property LogTypes $type
+ * @property array $log
+ * @property string $date
+ * @property string $correlation_id
+ *
+ */
 class SiteLogger extends Model
 {
-    protected string $connection = 'mongodb';
-    protected string $collection = 'logs';
-    protected string $primaryKey = 'id';
-    protected array $dates = ['date'];
-    public bool $timestamps = false;
+    use DefaultScoped;
+
+    /**
+     * @var string
+     */
+    protected $connection = 'mongodb';
+
+    /**
+     * @var string
+     */
+    protected $collection = 'logs';
+
+    /**
+     * @var string[]
+     */
+    protected $dates = ['date'];
+
+    /**
+     * @var bool
+     */
+    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -29,4 +65,20 @@ class SiteLogger extends Model
         'date',
         'correlation_id'
     ];
+
+    /**
+     * Validation rules for convenient validation without FormRequests
+     *
+     * @return array
+     */
+    public function rules(): array
+    {
+        return [
+            'title' => ['required', 'string'],
+            'action' => ['required', 'string'],
+            'ip' => ['required', 'ip'],
+            'type' => [new Enum(LogTypes::class)],
+            'date' => ['nullable', 'date_format:Y-m-d H:i:s'],
+        ];
+    }
 }

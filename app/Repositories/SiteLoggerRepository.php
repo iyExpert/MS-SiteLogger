@@ -2,7 +2,11 @@
 
 namespace App\Repositories;
 
-class SiteLoggerRepository
-{
+use App\Models\SiteLogger;
 
+class SiteLoggerRepository extends BaseQueriesRepository
+{
+    public function getModelName(): string {
+        return SiteLogger::class;
+    }
 }

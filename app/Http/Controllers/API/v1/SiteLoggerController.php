@@ -2,11 +2,18 @@
 
 namespace App\Http\Controllers\API\v1;
 
+use App\DTO\LogDto;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\SiteLoggerResource;
+use App\Models\SiteLogger;
+use App\Repositories\QueryFilters\SiteLoggerQFB;
 use App\Repositories\SiteLoggerRepository;
 use App\Services\SiteLoggerService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class SiteLoggerController extends Controller
 {
@@ -21,7 +28,70 @@ class SiteLoggerController extends Controller
     public function __construct()
     {
         $this->service = app(SiteLoggerService::class);
-        $this->repository = app(SiteLoggerRepository::class);
+    }
+
+    /**
+     * @param SiteLoggerQFB $qb
+     * @return AnonymousResourceCollection
+     */
+    public function index(SiteLoggerQFB $qb): AnonymousResourceCollection
+    {
+        return SiteLoggerResource::collection($this->service->filter($qb));
+    }
+
+    /**
+     * Get the specified item by ID.
+     *
+     * @param SiteLogger $siteLogger
+     * @return SiteLoggerResource
+     */
+    public function show(SiteLogger $siteLogger): SiteLoggerResource
+    {
+        SiteLoggerResource::withoutWrapping();
+        return new SiteLoggerResource($siteLogger);
+    }
+
+    /**
+     * Store Item
+     *
+     * @throws ValidationException
+     */
+    public function store(Request $request, LogDto $dto): JsonResponse
+    {
+        $siteLogger = new SiteLogger();
+        /**
+         * FormRequests are not supported by Lumen :(
+         *
+         * ToDO: Make own package for convenient validation
+         */
+        $this->validate($request, $siteLogger->rules());
+
+        $model = $this->service->fullSave($siteLogger, $dto->createFromArray($request->toArray())->toArray());
+
+        return response()->json([
+            'status' => 'created',
+            'data' => $this->show($model),
+        ]);
+    }
+
+
+    /**
+     * Remove the specified items by IDs.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException
+     */
+    public function destroyMultiple(Request $request): JsonResponse
+    {
+        /**
+         * FormRequests are not supported by Lumen :(
+         */
+        $this->validate($request, ['ids' => ['required', 'array']]);
+
+        $this->service->deleteMultiple($request->get('ids'));
+
+        return response()->json(['status' => 'deleted']);
     }
 
     /**
@@ -31,7 +101,7 @@ class SiteLoggerController extends Controller
      */
     public function ping(): JsonResponse
     {
-        return response()->json('SiteLogger ping successfully');
+        return response()->json('PONG: SiteLogger ping successfully');
     }
 
     /**

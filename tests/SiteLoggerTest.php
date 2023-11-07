@@ -15,7 +15,7 @@ class SiteLoggerTest extends TestCase
     {
         $this->get('/api/v1/ping')
             ->seeStatusCode(200)
-            ->seeJson(['SiteLogger ping successfully']);
+            ->seeJson(['PONG: SiteLogger ping successfully']);
     }
 
     /**

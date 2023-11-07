@@ -22,4 +22,10 @@ $router->get('/', function () use ($router) {
 $router->group(['prefix' => 'api/v1', 'namespace' => 'API\v1'], function () use ($router) {
     $router->get('ping', ['uses' => 'SiteLoggerController@ping']);
     $router->get('pingdb', ['uses' => 'SiteLoggerController@pingDB']);
+
+    //Logs
+    $router->get('logs', ['uses' => 'SiteLoggerController@index']);
+    $router->post('logs', ['uses' => 'SiteLoggerController@store']);
+    $router->get('logs/{siteLogger}', ['uses' => 'SiteLoggerController@show']);
+    $router->delete('logs', 'SiteLoggerController@destroyMultiple');
 });
