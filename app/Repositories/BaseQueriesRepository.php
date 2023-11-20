@@ -20,6 +20,11 @@ abstract class BaseQueriesRepository implements IQueriesRepository
             ->thenReturn();
     }
 
+    public function getOrFail(string $_id)
+    {
+        return $this->getModelName()::findOrFail($_id);
+    }
+
     public function fetchAll(BaseQueryFilterBuilder $queryFilterBuilder): EloquentCollection
     {
         return $this->applyFilter($queryFilterBuilder->getListParameters())->get();

@@ -26,6 +26,6 @@ $router->group(['prefix' => 'api/v1', 'namespace' => 'API\v1'], function () use 
     //Logs
     $router->get('logs', ['uses' => 'SiteLoggerController@index']);
     $router->post('logs', ['uses' => 'SiteLoggerController@store']);
-    $router->get('logs/{siteLogger}', ['uses' => 'SiteLoggerController@show']);
+    $router->get('logs/{_id}', ['uses' => 'SiteLoggerController@show']);
     $router->delete('logs', 'SiteLoggerController@destroyMultiple');
 });

@@ -40,13 +40,13 @@ class SiteLoggerController extends Controller
     /**
      * Get the specified item by ID.
      *
-     * @param SiteLogger $siteLogger
+     * @param string $_id
      * @return SiteLoggerResource
      */
-    public function show(SiteLogger $siteLogger): SiteLoggerResource
+    public function show(string $_id): SiteLoggerResource
     {
         SiteLoggerResource::withoutWrapping();
-        return new SiteLoggerResource($siteLogger);
+        return new SiteLoggerResource($this->service->getItem($_id));
     }
 
     /**
@@ -68,7 +68,7 @@ class SiteLoggerController extends Controller
 
         return response()->json([
             'status' => 'created',
-            'data' => $this->show($model),
+            'data' => $this->show($model->_id),
         ]);
     }
 

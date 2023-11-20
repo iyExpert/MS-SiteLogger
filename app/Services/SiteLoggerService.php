@@ -10,6 +10,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class SiteLoggerService extends BaseService
 {
+    public function getItem(string $_id): SiteLogger
+    {
+        $repository = new SiteLoggerRepository();
+        return $repository->getOrFail($_id);
+    }
+
     public function filter(BaseQueryFilterBuilder $qb): LengthAwarePaginator
     {
         $repository = new SiteLoggerRepository();
