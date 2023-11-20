@@ -3,6 +3,7 @@
 namespace App\Repositories\QueryFilters\SiteLogger;
 
 use App\Repositories\QueryFilters\BaseQueryFilter;
+use Carbon\Carbon;
 
 class DateFrom extends BaseQueryFilter
 {
@@ -11,6 +12,7 @@ class DateFrom extends BaseQueryFilter
 	 */
 	protected function applyParameter($builder)
 	{
-		return $builder->where('date', '>=', request()->get($this->filterName()));
+        $date = Carbon::createFromFormat('Y-m-d', request()->get($this->filterName()))->format('Y-m-d 00:00:00.000');
+        return $builder->where('date', '>=', new UTCDateTime((strtotime($date) . '000')));
 	}
 }
