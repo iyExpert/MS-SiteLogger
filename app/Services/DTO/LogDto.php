@@ -1,5 +1,5 @@
 <?php
-namespace App\DTO;
+namespace App\Services\DTO;
 
 class LogDto extends BaseDto
 {

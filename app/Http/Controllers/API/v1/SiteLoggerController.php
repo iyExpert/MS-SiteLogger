@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers\API\v1;
 
-use App\DTO\LogDto;
+use App\Services\DTO\LogDto;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SiteLoggerResource;
 use App\Models\SiteLogger;
 use App\Repositories\QueryFilters\SiteLoggerQFB;
-use App\Repositories\SiteLoggerRepository;
 use App\Services\SiteLoggerService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -18,7 +17,6 @@ use Illuminate\Validation\ValidationException;
 class SiteLoggerController extends Controller
 {
     private SiteLoggerService $service;
-    private SiteLoggerRepository $repository;
 
     /**
      * Create a new controller instance.
