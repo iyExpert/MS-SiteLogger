@@ -10,5 +10,6 @@ class LogDto extends BaseDto
     public ?string $date = null;
     public string $user_name = 'N/A';
     public string $type = 'INFO';
+    public array $tags = [];
     public array $log = [];
 }
