@@ -4,6 +4,7 @@ namespace App\Repositories\QueryFilters\SiteLogger;
 
 use App\Repositories\QueryFilters\BaseQueryFilter;
 use Carbon\Carbon;
+use MongoDB\BSON\UTCDateTime;
 
 class DateFrom extends BaseQueryFilter
 {
