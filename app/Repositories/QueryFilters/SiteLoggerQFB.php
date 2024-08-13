@@ -8,6 +8,7 @@ use App\Repositories\QueryFilters\SiteLogger\DateFrom;
 use App\Repositories\QueryFilters\SiteLogger\DateTo;
 use App\Repositories\QueryFilters\SiteLogger\Ip;
 use App\Repositories\QueryFilters\SiteLogger\TagsOrderId;
+use App\Repositories\QueryFilters\SiteLogger\TagsTransactionId;
 use App\Repositories\QueryFilters\SiteLogger\TagsUserId;
 use App\Repositories\QueryFilters\SiteLogger\Title;
 use App\Repositories\QueryFilters\SiteLogger\Type;
@@ -33,6 +34,7 @@ class SiteLoggerQFB extends BaseQueryFilterBuilder
             Type::class,
             Ip::class,
             TagsOrderId::class,
+            TagsTransactionId::class,
             TagsUserId::class,
             Action::class,
             UserId::class,
