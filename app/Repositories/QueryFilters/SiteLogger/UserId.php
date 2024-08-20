@@ -11,6 +11,6 @@ class UserId extends BaseQueryFilter
 	 */
 	protected function applyParameter($builder)
 	{
-		return $builder->where($this->filterName(), request()->get($this->filterName()));
+		return $builder->where($this->filterName(), (int)request()->get($this->filterName()));
 	}
 }

@@ -15,7 +15,7 @@ class TagsOrderId extends BaseQueryFilter
 			'tags' => [
 				'$elemMatch' => [
 					'entity' => 'orders',
-					'id' => request()->get($this->filterName())
+					'id' => (int)request()->get($this->filterName())
 				]
 			]
 		]);
