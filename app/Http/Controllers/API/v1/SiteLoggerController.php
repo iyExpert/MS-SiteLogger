@@ -115,4 +115,15 @@ class SiteLoggerController extends Controller
             return response()->json('Could not connect to database.', 500);
         }
     }
+
+    /**
+     * Store Item
+     *
+     * @throws Exception
+     */
+    public function clean(Request $request): JsonResponse
+    {
+        $msg = $this->service->clean($request->input());
+        return response()->json($msg);
+    }
 }
