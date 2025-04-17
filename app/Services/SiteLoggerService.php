@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\SiteLogger;
 use App\Repositories\QueryFilters\BaseQueryFilterBuilder;
 use App\Repositories\SiteLoggerRepository;
+use Generator;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
@@ -51,9 +52,15 @@ class SiteLoggerService extends BaseService
                 if (isset($setting['date'])) {
                     $this->convertDateTo($setting);
                 }
-                $msg .= (!$msg ? "Видалено: " : ", ") . $entity . " - " . SiteLogger::raw(function ($collection) use ($setting) {
-                        return $collection->deleteMany($setting)->getDeletedCount();
-                    });
+
+                $deletedCount = 0;
+
+                foreach ($this->getMatchingIds($setting) as $batch) {
+                    SiteLogger::destroy($batch);
+                    $deletedCount += count($batch);
+                }
+
+                $msg .= (!$msg ? "Видалено: " : ", ") . $entity . " - " . $deletedCount;
             }
 
             $this->save($siteLogger, $this->logCleanStuff(substr($msg, -1)));
@@ -72,6 +79,30 @@ class SiteLoggerService extends BaseService
 
         return $setting;
     }
+
+    private function getMatchingIds(array $setting, int $batchSize = 100): Generator
+    {
+        yield from SiteLogger::raw(function ($collection) use ($setting, $batchSize) {
+            $cursor = $collection->find(
+                $setting,
+                ['projection' => ['_id' => 1]]
+            );
+
+            $batch = [];
+            foreach ($cursor as $doc) {
+                $batch[] = (string)$doc['_id'];
+                if (count($batch) >= $batchSize) {
+                    yield $batch;
+                    $batch = [];
+                }
+            }
+
+            if (!empty($batch)) {
+                yield $batch;
+            }
+        });
+    }
+
 
     private function logCleanStuff(string $msg, bool $error = false): array
     {
